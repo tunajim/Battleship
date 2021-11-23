@@ -1,0 +1,31 @@
+{
+  "name": "battleship",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "test": "jest",
+    "start": "webpack serve --open",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tunajim/Battleship.git"
+  },
+  "author": "tunajim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tunajim/Battleship/issues"
+  },
+  "homepage": "https://github.com/tunajim/Battleship#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.16.4",
+    "css-loader": "^6.5.1",
+    "html-webpack-plugin": "^5.5.0",
+    "jest": "^27.3.1",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.64.1",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.5.0"
+  }
+}

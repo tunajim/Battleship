@@ -1,0 +1,79 @@
+* {
+    margin: none;
+    padding: none;
+}
+
+
+#overlay {
+    background-color: gray;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    visibility: visible;
+}
+
+#overlay.hidden {
+    visibility: hidden;
+}
+
+#logo {
+    font-size: 3rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.button {
+    padding: .5em 1em .5em 1em;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    background-color: gray;
+    gap: 2rem;
+}
+
+.board {
+    width: 300px;
+    height: 300px;
+    background-color: blue;
+    margin: auto;
+    display: grid;
+    grid-template-rows: repeat(10, 1fr);
+    grid-auto-flow: column;
+}
+
+.cell {
+    border: 1px solid black;
+}
+
+#player-board [data-ship="carrier"] {
+    background-color: rgb(72, 177, 89);
+}
+
+#player-board [data-ship="battleship"] {
+    background-color: rgb(122, 41, 41);
+}
+
+#player-board [data-ship="destroyer"] {
+    background-color: rgb(192, 96, 96);
+}
+
+#player-board [data-ship="submarine"] {
+    background-color: rgb(1, 1, 70);
+}
+
+#player-board [data-ship="patrol-boat"] {
+    background-color: rgb(38, 155, 120);
+}
