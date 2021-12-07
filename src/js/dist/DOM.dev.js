@@ -93,7 +93,7 @@ var vertButton = function vertButton() {
 var loadAlertBox = function loadAlertBox() {
   var alertBox = document.createElement("div");
   alertBox.id = "alert-box";
-  alertBox.textContent = "Welcome to Battleship! The top board is enemy waters, please place your ships on the board below";
+  alertBox.textContent = "Welcome to Battleship! The top board is enemy waters! Place 5 ships on bottom board to start game";
   container[0].appendChild(alertBox);
   return alertBox;
 };

@@ -24,8 +24,8 @@ const gameLoop = () => {
   const playerBoard = Gameboard("human");
   const computerBoard = Gameboard("computer");
 
-  const playerOne = Player("player one");
-  const computer = Computer("orochimaru");
+  const playerOne = Player("Player One");
+  const computer = Computer("Orochimaru");
 
   const computerDOM = LoadBoard(computerBoard);
   const alertBox = loadAlertBox();
@@ -65,6 +65,9 @@ const gameLoop = () => {
     console.log(compIndex);
   }
 
+  alertBox.textContent =
+    "Welcome to Battleship! The top board is enemy waters! Place 5 ships on bottom board to start game";
+
   plBoard.addEventListener("mouseover", previewShip);
   function previewShip(e) {
     playerIndex.i < 5
@@ -81,6 +84,7 @@ const gameLoop = () => {
 
   plBoard.addEventListener("click", setShips);
   function setShips(e) {
+    const changeDirection = document.getElementById("vertical");
     if (playerIndex.i < 5) {
       playerBoard.setBoard(e, playerIndex, vertical, plBoard);
       console.log(playerIndex.i);
@@ -91,6 +95,7 @@ const gameLoop = () => {
       plBoard.removeEventListener("click", setShips);
       alertBox.textContent =
         "All ships have been set.. Cannons ready.. click enemy board to attack!";
+      changeDirection.remove();
       play();
     }
   }
@@ -99,11 +104,12 @@ const gameLoop = () => {
   const computerContainer = document.getElementById("computer-board");
 
   let playerTurn = true;
+  let computerHit = { col: undefined, row: undefined };
 
   function play() {
     if (
-      !computerBoard.allShipsSunk("player one") &&
-      !playerBoard.allShipsSunk("computer")
+      !computerBoard.allShipsSunk("Player one") &&
+      !playerBoard.allShipsSunk("Computer")
     ) {
       if (playerTurn) {
         computerContainer.addEventListener("click", takeTurn);
@@ -144,13 +150,11 @@ const gameLoop = () => {
   function restartGame(e) {
     const restart = document.getElementById("restart-button");
     const alertBox = document.getElementById("alert-box");
-    const changeDirection = document.getElementById("vertical");
     restart.remove();
     plBoard.remove();
     compBoard.remove();
     alertBox.remove();
-    changeDirection.remove();
-    
+
     gameLoop();
   }
 };

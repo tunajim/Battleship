@@ -31,11 +31,11 @@ var Gameboard = function Gameboard(player) {
 
   var misses = [];
   var elements = [];
-  var carrier = Ship(5, "carrier");
-  var battleship = Ship(4, "battleship");
-  var destroyer = Ship(3, "destroyer");
-  var submarine = Ship(3, "submarine");
-  var patrolBoat = Ship(2, "patrol-boat");
+  var carrier = Ship(5, "Carrier");
+  var battleship = Ship(4, "Battleship");
+  var destroyer = Ship(3, "Destroyer");
+  var submarine = Ship(3, "Submarine");
+  var patrolBoat = Ship(2, "Patrol-boat");
   var boats = [carrier, battleship, destroyer, submarine, patrolBoat];
 
   function _generateBoard(rows, columns) {
@@ -55,6 +55,8 @@ var Gameboard = function Gameboard(player) {
   var placeShip = function placeShip(ship, column, row, vertical, elem, index) {
     var playable = _checkPlayed(ship, column, row, vertical);
 
+    var alertBox = document.getElementById("alert-box");
+
     if (!vertical && playable) {
       for (var i = column; i < ship.length + column; i++) {
         board[i][row] = {
@@ -64,7 +66,12 @@ var Gameboard = function Gameboard(player) {
         elem.querySelector("[data-coord-y=\"".concat(row, "\"][data-coord-x=\"").concat(i, "\"]")).dataset.ship = "".concat(boats[index.i].name);
       }
 
-      index.i < 5 ? index.i += 1 : console.log("board set");
+      if (index.i < 5) {
+        index.i += 1;
+        alertBox.textContent = "".concat(ship.name, " was placed");
+      } else {
+        alertBox.textContent = "".concat(ship.name, " was placed");
+      }
     } else if (vertical && playable) {
       for (var _i = row; _i < ship.length + row; _i++) {
         board[column][_i] = {
@@ -74,9 +81,15 @@ var Gameboard = function Gameboard(player) {
         elem.querySelector("[data-coord-y=\"".concat(_i, "\"][data-coord-x=\"").concat(column, "\"]")).dataset.ship = "".concat(boats[index.i].name);
       }
 
-      index.i += 1;
+      if (index.i < 5) {
+        index.i += 1;
+        alertBox.textContent = "".concat(ship.name, " was placed");
+      } else {
+        alertBox.textContent = "".concat(ship.name, " was placed");
+      }
     } else {
       console.log("illegal move");
+      alertBox.textContent = "illegal placement, try again";
     }
   };
 
@@ -153,7 +166,7 @@ var Gameboard = function Gameboard(player) {
     console.log(e.target);
     var col = 0;
     var row = 0;
-    var name = "player one";
+    var name = "Player One";
     col = e.target.dataset.coordX;
     row = e.target.dataset.coordY;
     e.target.parentNode.removeEventListener("click", handleMove);
@@ -162,7 +175,7 @@ var Gameboard = function Gameboard(player) {
 
   var randomMove = function randomMove(arr) {
     var elem = arr[Math.floor(Math.random() * 100)];
-    var name = "computer";
+    var name = "Computer";
     var col = elem.dataset.coordX;
     var row = elem.dataset.coordY;
     var played = recieveAttack(name, col, row, elem);

@@ -37,8 +37,8 @@ function setUpGame(e) {
 var gameLoop = function gameLoop() {
   var playerBoard = (0, _gameboard.Gameboard)("human");
   var computerBoard = (0, _gameboard.Gameboard)("computer");
-  var playerOne = Player("player one");
-  var computer = Computer("orochimaru");
+  var playerOne = Player("Player One");
+  var computer = Computer("Orochimaru");
   var computerDOM = LoadBoard(computerBoard);
   var alertBox = loadAlertBox();
   var toggleVert = vertButton();
@@ -71,6 +71,7 @@ var gameLoop = function gameLoop() {
     console.log(compIndex);
   }
 
+  alertBox.textContent = "Welcome to Battleship! The top board is enemy waters! Place 5 ships on bottom board to start game";
   plBoard.addEventListener("mouseover", previewShip);
 
   function previewShip(e) {
@@ -86,6 +87,8 @@ var gameLoop = function gameLoop() {
   plBoard.addEventListener("click", setShips);
 
   function setShips(e) {
+    var changeDirection = document.getElementById("vertical");
+
     if (playerIndex.i < 5) {
       playerBoard.setBoard(e, playerIndex, vertical, plBoard);
       console.log(playerIndex.i);
@@ -96,6 +99,7 @@ var gameLoop = function gameLoop() {
     } else {
       plBoard.removeEventListener("click", setShips);
       alertBox.textContent = "All ships have been set.. Cannons ready.. click enemy board to attack!";
+      changeDirection.remove();
       play();
     }
   }
@@ -103,9 +107,13 @@ var gameLoop = function gameLoop() {
   console.log(playerBoard.board);
   var computerContainer = document.getElementById("computer-board");
   var playerTurn = true;
+  var computerHit = {
+    col: undefined,
+    row: undefined
+  };
 
   function play() {
-    if (!computerBoard.allShipsSunk("player one") && !playerBoard.allShipsSunk("computer")) {
+    if (!computerBoard.allShipsSunk("Player one") && !playerBoard.allShipsSunk("Computer")) {
       if (playerTurn) {
         computerContainer.addEventListener("click", takeTurn);
         computerContainer.addEventListener("click", computerBoard.handleMove);
@@ -148,12 +156,10 @@ var gameLoop = function gameLoop() {
   function restartGame(e) {
     var restart = document.getElementById("restart-button");
     var alertBox = document.getElementById("alert-box");
-    var changeDirection = document.getElementById("vertical");
     restart.remove();
     plBoard.remove();
     compBoard.remove();
     alertBox.remove();
-    changeDirection.remove();
     gameLoop();
   }
 };

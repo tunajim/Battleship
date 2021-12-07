@@ -11,11 +11,11 @@ const Gameboard = (player) => {
   const misses = [];
   const elements = [];
 
-  const carrier = Ship(5, "carrier");
-  const battleship = Ship(4, "battleship");
-  const destroyer = Ship(3, "destroyer");
-  const submarine = Ship(3, "submarine");
-  const patrolBoat = Ship(2, "patrol-boat");
+  const carrier = Ship(5, "Carrier");
+  const battleship = Ship(4, "Battleship");
+  const destroyer = Ship(3, "Destroyer");
+  const submarine = Ship(3, "Submarine");
+  const patrolBoat = Ship(2, "Patrol-boat");
 
   const boats = [carrier, battleship, destroyer, submarine, patrolBoat];
 
@@ -32,6 +32,7 @@ const Gameboard = (player) => {
 
   const placeShip = (ship, column, row, vertical, elem, index) => {
     let playable = _checkPlayed(ship, column, row, vertical);
+    const alertBox = document.getElementById("alert-box");
     if (!vertical && playable) {
       for (let i = column; i < ship.length + column; i++) {
         board[i][row] = { ship: ship.name, index: i - column };
@@ -39,7 +40,12 @@ const Gameboard = (player) => {
           `[data-coord-y="${row}"][data-coord-x="${i}"]`
         ).dataset.ship = `${boats[index.i].name}`;
       }
-      index.i < 5 ? (index.i += 1) : console.log("board set");
+      if (index.i < 5) {
+        index.i += 1;
+        alertBox.textContent = `${ship.name} was placed`;
+      } else {
+        alertBox.textContent = `${ship.name} was placed`;
+      }
     } else if (vertical && playable) {
       for (let i = row; i < ship.length + row; i++) {
         board[column][i] = { ship: ship.name, index: i - row };
@@ -47,9 +53,15 @@ const Gameboard = (player) => {
           `[data-coord-y="${i}"][data-coord-x="${column}"]`
         ).dataset.ship = `${boats[index.i].name}`;
       }
-      index.i += 1;
+      if (index.i < 5) {
+        index.i += 1;
+        alertBox.textContent = `${ship.name} was placed`;
+      } else {
+        alertBox.textContent = `${ship.name} was placed`;
+      }
     } else {
       console.log("illegal move");
+      alertBox.textContent = "illegal placement, try again";
     }
   };
 
@@ -127,7 +139,7 @@ const Gameboard = (player) => {
     console.log(e.target);
     let col = 0;
     let row = 0;
-    const name = "player one";
+    const name = "Player One";
     col = e.target.dataset.coordX;
     row = e.target.dataset.coordY;
     e.target.parentNode.removeEventListener("click", handleMove);
@@ -136,7 +148,7 @@ const Gameboard = (player) => {
 
   const randomMove = (arr) => {
     const elem = arr[Math.floor(Math.random() * 100)];
-    const name = "computer";
+    const name = "Computer";
     let col = elem.dataset.coordX;
     let row = elem.dataset.coordY;
     const played = recieveAttack(name, col, row, elem);

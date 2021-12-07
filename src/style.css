@@ -106,24 +106,24 @@ toggle vertical
     background-color: red;
 }
 
-#player-board [data-ship="carrier"] {
+#player-board [data-ship="Carrier"] {
     background-color: rgb(72, 177, 89);
 }
 
 
-#player-board [data-ship="battleship"] {
+#player-board [data-ship="Battleship"] {
     background-color: rgb(122, 41, 41);
 }
 
-#player-board [data-ship="destroyer"] {
+#player-board [data-ship="Destroyer"] {
     background-color: rgb(192, 96, 96);
 }
 
-#player-board [data-ship="submarine"] {
+#player-board [data-ship="Submarine"] {
     background-color: rgb(1, 1, 70);
 }
 
-#player-board [data-ship="patrol-boat"] {
+#player-board [data-ship="Patrol-boat"] {
     background-color: rgb(38, 155, 120);
 }
 

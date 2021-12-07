@@ -74,17 +74,18 @@ const vertButton = () => {
   button.id = "vertical";
   button.textContent = "Switch Direction";
   container[0].appendChild(button);
-}
+};
 
 const loadAlertBox = () => {
   const alertBox = document.createElement("div");
   alertBox.id = "alert-box";
-  alertBox.textContent = "Welcome to Battleship! The top board is enemy waters, please place your ships on the board below";
+  alertBox.textContent =
+    "Welcome to Battleship! The top board is enemy waters! Place 5 ships on bottom board to start game";
 
   container[0].appendChild(alertBox);
 
   return alertBox;
-}
+};
 
 function _hideAlertBox(e) {
   e.target.parentNode.classList.add("hidden");
@@ -95,6 +96,13 @@ const createRestartButton = (alertBox) => {
   restartButton.id = "restart-button";
   restartButton.textContent = "Restart";
   alertBox.after(restartButton);
-}
+};
 
-module.exports = { loadGame, LoadBoard, ClearBoard, vertButton, loadAlertBox, createRestartButton };
+module.exports = {
+  loadGame,
+  LoadBoard,
+  ClearBoard,
+  vertButton,
+  loadAlertBox,
+  createRestartButton,
+};
