@@ -13,23 +13,26 @@ const Ship = (length, name) => {
 
   const hit = (index) => {
     ship[index].status = "hit";
-    _isSunk();
+    console.log(ship);
   };
 
-  const _isSunk = () => {
+  function isSunk() {
+    this.sunk = true;
     ship.forEach((element) => {
-      element.status === "hit" ? (sunk = true) : (sunk = false);
+      console.log(element.status);
+      if (element.status === "unhit") this.sunk = false;
     });
+    console.log(this.sunk);
   };
 
   return {
+    hit,
+    isSunk,
     length,
     ship,
     name,
-    sunk,
-    hit,
+    sunk
   };
 };
 
 module.exports = Ship;
-  

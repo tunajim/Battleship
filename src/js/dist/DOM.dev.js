@@ -22,22 +22,34 @@ var loadGame = function loadGame() {
 };
 
 var LoadBoard = function LoadBoard(board) {
-  var computerBoard = document.createElement("div");
-  var playerBoard = document.createElement("div");
-  computerBoard.id = "computer-board";
-  playerBoard.id = "player-board";
-  computerBoard.classList.add("board");
-  playerBoard.classList.add("board");
+  var comp = document.createElement("div");
+  var pl = document.createElement("div");
+  comp.id = "computer-board";
+  pl.id = "player-board";
+  comp.classList.add("board");
+  pl.classList.add("board");
 
   if (board.player === "human") {
-    _populateBoard(board, playerBoard);
+    _populateBoard(board, pl);
 
-    container[0].appendChild(playerBoard);
+    container[0].appendChild(pl);
   } else {
-    _populateBoard(board, computerBoard);
+    _populateBoard(board, comp);
 
-    container[0].appendChild(computerBoard);
+    container[0].appendChild(comp);
   }
+
+  return {
+    comp: comp,
+    pl: pl
+  };
+};
+
+var ClearBoard = function ClearBoard() {
+  var boards = document.querySelectorAll(".board");
+  boards.forEach(function (elem) {
+    elem.remove();
+  });
 };
 
 var _populateBoard = function _populateBoard(board, element) {
@@ -71,7 +83,37 @@ var _setAttributes = function _setAttributes(cell, board, col, row) {
   return cell;
 };
 
+var vertButton = function vertButton() {
+  var button = document.createElement("button");
+  button.id = "vertical";
+  button.textContent = "Switch Direction";
+  container[0].appendChild(button);
+};
+
+var loadAlertBox = function loadAlertBox() {
+  var alertBox = document.createElement("div");
+  alertBox.id = "alert-box";
+  alertBox.textContent = "Welcome to Battleship! The top board is enemy waters, please place your ships on the board below";
+  container[0].appendChild(alertBox);
+  return alertBox;
+};
+
+function _hideAlertBox(e) {
+  e.target.parentNode.classList.add("hidden");
+}
+
+var createRestartButton = function createRestartButton(alertBox) {
+  var restartButton = document.createElement("button");
+  restartButton.id = "restart-button";
+  restartButton.textContent = "Restart";
+  alertBox.after(restartButton);
+};
+
 module.exports = {
   loadGame: loadGame,
-  LoadBoard: LoadBoard
+  LoadBoard: LoadBoard,
+  ClearBoard: ClearBoard,
+  vertButton: vertButton,
+  loadAlertBox: loadAlertBox,
+  createRestartButton: createRestartButton
 };

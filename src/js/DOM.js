@@ -1,10 +1,9 @@
-
 const container = document.getElementsByTagName("body");
 
 const loadGame = () => {
   const overlay = document.createElement("div");
   overlay.id = "overlay";
-  container[0].appendChild(overlay); 
+  container[0].appendChild(overlay);
 
   const logo = document.createElement("h1");
   logo.id = "logo";
@@ -16,25 +15,34 @@ const loadGame = () => {
   start.textContent = "Start Game";
   overlay.appendChild(start);
 
-  return { overlay, logo, start};
+  return { overlay, logo, start };
 };
 
 const LoadBoard = (board) => {
-  const computerBoard = document.createElement("div");
-  const playerBoard = document.createElement("div");
+  const comp = document.createElement("div");
+  const pl = document.createElement("div");
 
-  computerBoard.id = "computer-board";
-  playerBoard.id = "player-board";
-  computerBoard.classList.add("board");
-  playerBoard.classList.add("board");
+  comp.id = "computer-board";
+  pl.id = "player-board";
+  comp.classList.add("board");
+  pl.classList.add("board");
 
   if (board.player === "human") {
-    _populateBoard(board, playerBoard);
-    container[0].appendChild(playerBoard);
+    _populateBoard(board, pl);
+    container[0].appendChild(pl);
   } else {
-    _populateBoard(board, computerBoard);
-    container[0].appendChild(computerBoard);
+    _populateBoard(board, comp);
+    container[0].appendChild(comp);
   }
+
+  return { comp, pl };
+};
+
+const ClearBoard = () => {
+  const boards = document.querySelectorAll(".board");
+  boards.forEach((elem) => {
+    elem.remove();
+  });
 };
 
 const _populateBoard = (board, element) => {
@@ -61,4 +69,32 @@ const _setAttributes = (cell, board, col, row) => {
   return cell;
 };
 
-module.exports = { loadGame, LoadBoard };
+const vertButton = () => {
+  const button = document.createElement("button");
+  button.id = "vertical";
+  button.textContent = "Switch Direction";
+  container[0].appendChild(button);
+}
+
+const loadAlertBox = () => {
+  const alertBox = document.createElement("div");
+  alertBox.id = "alert-box";
+  alertBox.textContent = "Welcome to Battleship! The top board is enemy waters, please place your ships on the board below";
+
+  container[0].appendChild(alertBox);
+
+  return alertBox;
+}
+
+function _hideAlertBox(e) {
+  e.target.parentNode.classList.add("hidden");
+}
+
+const createRestartButton = (alertBox) => {
+  const restartButton = document.createElement("button");
+  restartButton.id = "restart-button";
+  restartButton.textContent = "Restart";
+  alertBox.after(restartButton);
+}
+
+module.exports = { loadGame, LoadBoard, ClearBoard, vertButton, loadAlertBox, createRestartButton };

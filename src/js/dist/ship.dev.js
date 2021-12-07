@@ -17,22 +17,28 @@ var Ship = function Ship(length, name) {
 
   var hit = function hit(index) {
     ship[index].status = "hit";
-
-    _isSunk();
+    console.log(ship);
   };
 
-  var _isSunk = function _isSunk() {
+  function isSunk() {
+    var _this = this;
+
+    this.sunk = true;
     ship.forEach(function (element) {
-      element.status === "hit" ? sunk = true : sunk = false;
+      console.log(element.status);
+      if (element.status === "unhit") _this.sunk = false;
     });
-  };
+    console.log(this.sunk);
+  }
 
+  ;
   return {
+    hit: hit,
+    isSunk: isSunk,
     length: length,
     ship: ship,
     name: name,
-    sunk: sunk,
-    hit: hit
+    sunk: sunk
   };
 };
 

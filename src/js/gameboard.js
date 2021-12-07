@@ -1,10 +1,15 @@
 const Ship = require("./ship");
+const { LoadBoard, createRestartButton } = require("./DOM");
+const { takeTurn, replay } = require("./index");
+import fire from "../images/fire.png";
+import cross from "../images/crossed.png";
 
 const Gameboard = (player) => {
   const rows = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
   const columns = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
   const board = _generateBoard(rows, columns);
   const misses = [];
+  const elements = [];
 
   const carrier = Ship(5, "carrier");
   const battleship = Ship(4, "battleship");
@@ -25,41 +30,78 @@ const Gameboard = (player) => {
     return arr;
   }
 
-  const placeShip = (ship, column, row, vertical) => {
-    console.log({ column, row });
+  const placeShip = (ship, column, row, vertical, elem, index) => {
     let playable = _checkPlayed(ship, column, row, vertical);
     if (!vertical && playable) {
       for (let i = column; i < ship.length + column; i++) {
         board[i][row] = { ship: ship.name, index: i - column };
+        elem.querySelector(
+          `[data-coord-y="${row}"][data-coord-x="${i}"]`
+        ).dataset.ship = `${boats[index.i].name}`;
       }
+      index.i < 5 ? (index.i += 1) : console.log("board set");
     } else if (vertical && playable) {
       for (let i = row; i < ship.length + row; i++) {
         board[column][i] = { ship: ship.name, index: i - row };
+        elem.querySelector(
+          `[data-coord-y="${i}"][data-coord-x="${column}"]`
+        ).dataset.ship = `${boats[index.i].name}`;
+      }
+      index.i += 1;
+    } else {
+      console.log("illegal move");
+    }
+  };
+
+  const highlightShip = (elem, index, vertical) => {
+    const x = parseInt(elem.target.dataset.coordX, 10);
+    const y = parseInt(elem.target.dataset.coordY, 10);
+    const playerBoard = document.getElementById("player-board");
+    let playable = _checkPlayed(boats[index.i], x, y, vertical);
+    removeHighlight(elem, index);
+    elem.target.classList.add("highlight");
+    if (vertical && playable) {
+      for (let i = y; i < boats[index.i].length + y; i++) {
+        playerBoard
+          .querySelector(`[data-coord-x="${x}"][data-coord-y="${i}"]`)
+          .classList.add("highlight");
+      }
+    } else if (!vertical && playable) {
+      for (let i = x; i < boats[index.i].length + x; i++) {
+        playerBoard
+          .querySelector(`[data-coord-x="${i}"][data-coord-y="${y}"]`)
+          .classList.add("highlight");
       }
     } else {
-      console.log("invalid position, ship must remain on board");
-      placeShip(
-        ship,
-        Math.floor(Math.random() * 10),
-        Math.floor(Math.random() * 10),
-        vertical
-      );
+      elem.target.classList.add("invalid");
     }
+  };
+
+  const removeHighlight = (elem, index, vertical) => {
+    Array.from(elem.target.parentNode.children).forEach((elem) => {
+      elem.classList.remove("highlight", "invalid");
+    });
+  };
+
+  const setBoard = (elem, index, vertical, boardElem) => {
+    let set = false;
+
+    const x = parseInt(elem.target.dataset.coordX, 10);
+    const y = parseInt(elem.target.dataset.coordY, 10);
+
+    placeShip(boats[index.i], x, y, vertical, boardElem, index);
   };
 
   function _checkPlayed(ship, col, row, vert) {
     let playable = true;
-    const max = 10;
-    console.log({ vert });
+    const max = 11;
 
     if (!vert) {
       if (ship.length < max - col) {
         for (let i = col; i < ship.length + col; i++) {
           const cell = board[i][row];
-          console.log(typeof cell);
           if (typeof cell === "object") {
             playable = false;
-            console.log("ship already placed");
           }
         }
       } else {
@@ -69,10 +111,8 @@ const Gameboard = (player) => {
       if (ship.length < max - row) {
         for (let i = row; i < ship.length + row; i++) {
           const cell = board[col][i];
-          console.log(typeof cell);
           if (typeof cell === "object") {
             playable = false;
-            console.log("ship already placed");
           }
         }
       } else {
@@ -80,47 +120,87 @@ const Gameboard = (player) => {
       }
     }
 
-    console.log({ vert });
-    console.log({ playable });
-    console.log({ ship });
     return playable;
   }
 
-  const recieveAttack = (name, column, row) => {
-    let result = null;
-    if (board[column][row].length === 1) {
-      misses.push({ column, row });
-      board[column][row] = `miss`;
-      result = console.log(`${name} missed`);
-    } else if (board[column][row] === "hit") {
-      result = console.log("spot already hit");
-    } else {
-      _updateHits(column, row);
-      result = console.log(`${name}'s shot landed!`);
-    }
-    return result;
+  const handleMove = (e) => {
+    console.log(e.target);
+    let col = 0;
+    let row = 0;
+    const name = "player one";
+    col = e.target.dataset.coordX;
+    row = e.target.dataset.coordY;
+    e.target.parentNode.removeEventListener("click", handleMove);
+    recieveAttack(name, col, row, e.target);
   };
 
-  function _updateHits(col, row) {
+  const randomMove = (arr) => {
+    const elem = arr[Math.floor(Math.random() * 100)];
+    const name = "computer";
+    let col = elem.dataset.coordX;
+    let row = elem.dataset.coordY;
+    const played = recieveAttack(name, col, row, elem);
+    if (played) randomMove(arr);
+  };
+
+  const recieveAttack = (name, col, row, elem) => {
+    let played = false;
+    const emptySpace = 1;
+    const alertBox = document.getElementById("alert-box");
+    if (row !== undefined && col !== undefined)
+      if (board[col][row].length === emptySpace) {
+        misses.push({ col, row });
+        board[col][row] = `miss`;
+        console.log(`${name} missed`);
+        alertBox.textContent = `${name} missed`;
+        elem.classList.add("miss");
+        elem.dataset.played = true;
+        elem.style.backgroundImage = `url("${cross}")`;
+      } else if (board[col][row] === "hit" || board[col][row] === "miss") {
+        played = true;
+        console.log("spot already played");
+        alertBox.textContent = `spot already played`;
+        elem.dataset.played = true;
+        // elem.parentNode.addEventListener("click", handleMove);
+      } else {
+        elem.style.backgroundImage = `url("${fire}")`;
+        elem.dataset.played = true;
+        console.log(`${name}'s shot landed!`);
+        alertBox.textContent = `${name}'s shot landed!`;
+
+        _updateHits(col, row, name, alertBox, elem);
+      }
+    return played;
+  };
+
+  function _updateHits(col, row, name, alertBox, elem) {
+    const index = boats.findIndex((e) => e.name === elem.dataset.ship);
+    const cell = document.querySelector(
+      `[data-coord-x="${col}"][data-coord-y="${row}"]`
+    );
     for (let i = 0; i < boats.length; i++) {
       if (boats[i].name === board[col][row].ship) {
         boats[i].hit(board[col][row].index);
+        boats[i].isSunk();
         board[col][row] = "hit";
+      }
+      if (boats[index].sunk) {
+        alertBox.textContent = `${boats[index].name} was sunk by ${name}`;
       }
     }
   }
 
   const allShipsSunk = (name) => {
+    const alertBox = document.getElementById("alert-box");
     let done = true;
     boats.forEach((element) => {
       if (!element.sunk) done = false;
     });
-    if (done)
-      console.log(
-        `${name} has sunken all of their enemies ships, ${name} wins!`
-      );
-
-    console.log({ done });
+    if (done) {
+      alertBox.textContent = `${name} has sunken all of their enemies ships, ${name} wins!`;
+      createRestartButton(alertBox);
+    }
+    console.log(done);
     return done;
   };
 
@@ -128,6 +208,11 @@ const Gameboard = (player) => {
     placeShip,
     recieveAttack,
     allShipsSunk,
+    handleMove,
+    randomMove,
+    setBoard,
+    highlightShip,
+    removeHighlight,
     player,
     board,
     rows,
@@ -137,4 +222,4 @@ const Gameboard = (player) => {
   };
 };
 
-module.exports = Gameboard;
+export { Gameboard };
