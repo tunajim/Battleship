@@ -2,5 +2,5 @@
 
 Recreate Battleship using Vanilla JS, HTML, CSS
 
-Game live at: tunajim.github.io/Battleship
+Game live at: https://tunajim.github.io/Battleship/
 
